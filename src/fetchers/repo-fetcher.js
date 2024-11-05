@@ -34,7 +34,26 @@ const fetcher = (variables, token) => {
           name
         }
         forkCount
+        defaultBranchRef {
+          target {
+            ... on Commit {
+              history(first: 100) {
+                edges {
+                  node {
+                    committedDate
+                    message
+                    author {
+                      name
+                      email
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
       }
+
       query getRepo($login: String!, $repo: String!) {
         user(login: $login) {
           repository(name: $repo) {
@@ -47,14 +66,15 @@ const fetcher = (variables, token) => {
           }
         }
       }
-    `,
+      `,
       variables,
     },
     {
       Authorization: `token ${token}`,
-    },
+    }
   );
 };
+
 
 const urlExample = "/api/pin?username=USERNAME&amp;repo=REPO_NAME";
 
